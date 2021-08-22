@@ -34,17 +34,37 @@
 // 30 --> 11110 => 4
 // 31 --> 11111 => 5
 
+//From the above, numbers are separated into ranges by powers of two, eg. 2^0, 2^1, 2^2...
+//At each divider x (number that is power of two), the next x numbers including itself, will have one more number of 1's compared to the previous x numbers.
 
-class Solution {
+class Solution
+{
 public:
-    vector<int> countBits(int n) {
-        vector<int> toReturn (n+1, 0);
-        for (int i = 1; i < n+1; i=i*2)
+    vector<int> countBits(int n)
+    {
+        vector<int> toReturn(n + 1);
+        for (int i = 1; i < n + 1; i = i * 2)
         {
-            for (int j = 0; j < i && j+i<n+1; j++)
+            for (int j = 0; j < i && j + i < n + 1; j++)
             {
-                toReturn[i+j] = toReturn[j]+1;
+                toReturn[i + j] = toReturn[j] + 1;
             }
+        }
+        return toReturn;
+    }
+
+
+    vector<int> countBitsOptimized(int n)
+    {
+        vector<int> toReturn(n + 1, 0);
+        //offset to corresponding previous value stays constant within each group of numbers separated by power of 2
+        //offset is also the number of times we multiply by two
+        int offset = 1;
+        for (int i = 1; i < n + 1; i++)
+        {
+            // multiply offset by two when we reach the end of group
+            offset = (i == offset * 2) ? i : offset;
+            toReturn[i] = toReturn[i - offset] + 1;
         }
         return toReturn;
     }
